@@ -1,42 +1,58 @@
-# 🧠 Análise de Sentimentos com Gemini API
+# Aspect-Based Sentiment Analysis with Gemini
 
-Este projeto demonstra como utilizar a API Gemini (modelo generativo da Google) para analisar sentimentos em avaliações de hotéis escritas em português. O foco da análise está em identificar o sentimento em cinco aspectos principais:
+Uses the Google Gemini API to analyze hotel reviews written in Portuguese, classifying the sentiment for five aspects:
 
-- Localização
-- Limpeza
-- Atendimento
-- Café da manhã
-- Quarto
+- Location (*localização*)
+- Cleanliness (*limpeza*)
+- Service (*atendimento*)
+- Breakfast (*café da manhã*)
+- Room (*quarto*)
 
-## 🔍 Como funciona
+Each aspect is labeled as `muito negativo`, `negativo`, `neutro`, `positivo` or `muito positivo`. Aspects not mentioned in a review default to `neutro`.
 
-1. As avaliações são lidas a partir de um arquivo de texto (`review_hoteis_portugues.txt`).
-2. Cada review é enviado à API Gemini com um prompt que pede a classificação de sentimentos por aspecto.
-3. A resposta (em JSON) é tratada, limpa e convertida para um DataFrame.
-4. O resultado final é estruturado e pode ser utilizado para relatórios ou visualizações.
+## How it works
 
-## 🧰 Ferramentas e Tecnologias
+1. Reviews are read from `review_hoteis_portugues.txt` (one per line).
+2. Each review is sent to Gemini (`gemini-1.5-flash`) with a prompt asking for a JSON classification per aspect.
+3. The response is cleaned (markdown fences removed with regex), parsed and loaded into a pandas DataFrame.
+4. Sentiment counts per aspect are aggregated and saved to `contagem_aspectos.csv`.
 
-- **Python 3**
-- **Google Generative AI (gemini-1.5-flash)**
-- **Pandas** – manipulação de dados
-- **Regex** – limpeza de resposta JSON
-- **JSON** – estrutura de retorno
-- **time.sleep** – controle de chamadas à API
+`time.sleep` is used between calls to respect API rate limits.
 
-## 📂 Estrutura do Projeto
+## Project structure
 
-- `analise_sentimentos.ipynb`: notebook principal com todo o fluxo de análise
-- `review_hoteis_portugues.txt`: arquivo com os reviews de entrada
-- `README.md`: documentação do projeto
+```
+.
+├── analise_sentimentos.ipynb      # Full analysis flow
+├── review_hoteis_portugues.txt    # Input reviews
+├── requirements.txt
+├── LICENSE
+└── README.md
+```
 
-## ⚠️ Observações
+## Getting started
 
-- A chave da API Gemini não deve ser compartilhada publicamente. Substitua por uma variável de ambiente ou outro método seguro.
+```bash
+git clone https://github.com/ggcds/analise_sentimentos.git
+cd analise_sentimentos
+pip install -r requirements.txt
+jupyter notebook analise_sentimentos.ipynb
+```
 
-## 📌 Possíveis Melhorias
+Get an API key at [Google AI Studio](https://aistudio.google.com/apikey) and set it in the notebook. **Never commit your key**; prefer an environment variable, e.g. `os.environ["GEMINI_API_KEY"]`.
 
-- Exportação dos resultados para CSV ou integração com dashboards
-- Aplicação do mesmo fluxo a outros contextos (produtos, restaurantes, etc.)
-- Uso de modelos open-source para evitar dependência de APIs
+Note: `gemini-1.5-flash` may be retired by Google; if calls fail, switch to a currently available Gemini model in the notebook.
 
+## Possible improvements
+
+- Export results to dashboards
+- Apply the same flow to other domains (products, restaurants)
+- Use open-source models to avoid API dependency
+
+## Author
+
+**Guilherme Barros Caldas**
+
+## License
+
+[MIT](LICENSE)
